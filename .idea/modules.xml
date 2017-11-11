@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/src/aoc.iml" filepath="$PROJECT_DIR$/src/aoc.iml" />
       <module fileurl="file://$PROJECT_DIR$/rusty.iml" filepath="$PROJECT_DIR$/rusty.iml" />
     </modules>
   </component>
