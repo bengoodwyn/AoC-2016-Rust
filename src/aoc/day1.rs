@@ -75,7 +75,6 @@ pub fn part1(filename: &str) -> i32 {
 pub fn part2(filename: &str) -> i32 {
     let input = input::read(&filename);
     let init_position = Position{x:0, y:0, direction: Direction::North};
-    let mut visited = HashSet::new();
     let result =
         input
             .split(", ")
@@ -96,17 +95,20 @@ pub fn part2(filename: &str) -> i32 {
                 }
                 Some(*position)
             })
-            .filter(|position| {
+            .scan(HashSet::new(), |visited, position| {
                 if visited.contains(&position.coords()) {
-                    true
+                    Some((true,position))
                 } else {
                     visited.insert(position.coords());
-                    false
+                    Some((false,position))
                 }
+            })
+            .filter(|&(done, _)| {
+                done
             })
             .next();
     match result {
-        Some(final_position) => final_position.x.abs() + final_position.y.abs(),
-        None => panic!("No duplicate positions")
+        Some((true, final_position)) => final_position.x.abs() + final_position.y.abs(),
+        _ => panic!("No duplicate positions")
     }
 }
