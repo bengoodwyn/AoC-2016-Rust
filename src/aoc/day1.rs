@@ -28,7 +28,7 @@ impl Direction {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 struct Position {
     x: i32,
     y: i32,
@@ -36,9 +36,9 @@ struct Position {
 }
 
 impl Position {
-  fn turn(&self, direction_to_turn: &str) -> Position {
-      Position{x: self.x, y: self.y, direction: self.direction.turn(direction_to_turn)}
-  }
+    fn turn(&self, direction_to_turn: &str) -> Position {
+        Position{x: self.x, y: self.y, direction: self.direction.turn(direction_to_turn)}
+    }
     fn travel(&self, distance_to_travel: &str) -> Position {
         let distance = distance_to_travel.parse::<i32>().unwrap();
         match self.direction {
