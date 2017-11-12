@@ -42,15 +42,73 @@ fn new_key(start_key: char, direction: char) -> char {
     }
 }
 
-pub fn part1(filename: &str) -> String {
+fn new_crazy_key(start_key: char, direction: char) -> char {
+    match direction {
+        'U' => match start_key {
+            '3' => '1',
+            '6' => '2',
+            '7' => '3',
+            '8' => '4',
+            'A' => '6',
+            'B' => '7',
+            'C' => '8',
+            'D' => 'B',
+            _ => start_key
+        },
+        'D' => match start_key {
+            '1' => '3',
+            '2' => '6',
+            '3' => '7',
+            '4' => '8',
+            '6' => 'A',
+            '7' => 'B',
+            '8' => 'C',
+            'B' => 'D',
+            _ => start_key
+        },
+        'L' => match start_key {
+            '9' => '8',
+            '4' => '3',
+            '8' => '7',
+            'C' => 'B',
+            '3' => '2',
+            '7' => '6',
+            'B' => 'A',
+            '6' => '5',
+            _ => start_key
+        },
+        'R' => match start_key {
+            '8' => '9',
+            '3' => '4',
+            '7' => '8',
+            'B' => 'C',
+            '2' => '3',
+            '6' => '7',
+            'A' => 'B',
+            '5' => '6',
+            _ => start_key
+        },
+        _ => panic!("Invalid direction {}", direction)
+    }
+}
+
+fn keypad(filename: &str, keypad_fn: &Fn(char, char) -> char) -> String {
     let input = input::read(&filename);
     let mut key = '5';
     let mut code = String::new();
     for line in input.split("\n") {
         for direction in line.chars() {
-            key = new_key(key, direction)
+            key = keypad_fn(key, direction)
         }
         code.push(key)
     }
     code
+}
+
+pub fn part1(filename: &str) -> String {
+    keypad(filename, &new_key)
+}
+
+pub fn part2(filename: &str) -> String {
+    keypad(filename, &new_crazy_key)
 }
