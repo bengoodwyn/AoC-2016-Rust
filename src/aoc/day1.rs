@@ -78,15 +78,14 @@ pub fn part2(filename: &str) -> i32 {
     let result =
         input
             .split(", ")
-            .map(|command| {
-                command.split_at(1)
-            })
-            .map(|(direction_to_turn, distance_to_travel)| {
-                (direction_to_turn.chars().nth(0).unwrap(), distance_to_travel.parse::<usize>().unwrap())
-            })
-            .flat_map(|(direction_to_turn, distance_to_travel)| {
+            .map(|command| command.split_at(1) )
+            .map(|(direction_to_turn, distance_to_travel)|
+                (direction_to_turn.chars().nth(0).unwrap(),
+                 distance_to_travel.parse::<usize>().unwrap())
+            )
+            .flat_map(|(direction_to_turn, distance_to_travel)|
                 iter::repeat(direction_to_turn).take(distance_to_travel).enumerate()
-            })
+            )
             .scan(init_position, |position, (step, direction_to_turn)| {
                 if 0 == step {
                     *position = position.turn(direction_to_turn).travel(1)
@@ -103,12 +102,11 @@ pub fn part2(filename: &str) -> i32 {
                     Some((false,position))
                 }
             })
-            .filter(|&(done, _)| {
-                done
-            })
+            .filter(|&(done, _)| done )
+            .map(|(_,position)| position )
             .next();
     match result {
-        Some((true, final_position)) => final_position.x.abs() + final_position.y.abs(),
-        _ => panic!("No duplicate positions")
+        Some(final_position) => final_position.x.abs() + final_position.y.abs(),
+        None => panic!("No duplicate positions")
     }
 }
