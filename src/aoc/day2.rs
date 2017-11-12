@@ -99,9 +99,9 @@ fn keypad(filename: &str, keypad_fn: &Fn(char, char) -> char) -> String {
         .map(|line|{
             line
                 .chars()
-                    .fold('5', |key, direction| {
-                        keypad_fn(key, direction)
-                    })
+                .fold('5', |key, direction| {
+                    keypad_fn(key, direction)
+                })
         })
         .collect::<String>()
 }
