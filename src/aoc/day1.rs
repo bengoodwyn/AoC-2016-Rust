@@ -1,5 +1,6 @@
 use aoc::input;
 use std::collections::HashSet;
+use std::iter;
 
 #[derive(Debug, Clone, Copy)]
 enum Direction {
@@ -58,36 +59,54 @@ pub fn part1(filename: &str) -> i32 {
     let init_position = Position{x:0, y:0, direction: Direction::North};
     let final_position =
         input
-        .split(", ")
-        .map(|command| {
-            command.split_at(1)
-        })
-        .map(|(direction_to_turn, distance_to_travel)| {
-            (direction_to_turn.chars().nth(0).unwrap(), distance_to_travel.parse::<i32>().unwrap())
-        })
-        .fold(init_position, |position, (direction_to_turn, distance_to_travel)| {
-            position.turn(direction_to_turn).travel(distance_to_travel)
-        });
+            .split(", ")
+            .map(|command| {
+                command.split_at(1)
+            })
+            .map(|(direction_to_turn, distance_to_travel)| {
+                (direction_to_turn.chars().nth(0).unwrap(), distance_to_travel.parse::<i32>().unwrap())
+            })
+            .fold(init_position, |position, (direction_to_turn, distance_to_travel)| {
+                position.turn(direction_to_turn).travel(distance_to_travel)
+            });
     final_position.x.abs() + final_position.y.abs()
 }
 
 pub fn part2(filename: &str) -> i32 {
-    let mut visited = HashSet::new();
     let input = input::read(&filename);
-    let mut position = Position{x:0, y:0, direction: Direction::North};
-    for command in input.split(", ") {
-        let (direction_to_turn, distance_to_travel) = command.split_at(1);
-        let direction_to_turn = direction_to_turn.chars().nth(0).unwrap();
-        let distance_to_travel = distance_to_travel.parse::<i32>().unwrap();
-        position = position.turn(direction_to_turn);
-        for _ in 0..distance_to_travel {
-            position = position.travel(1);
-            let coords = position.coords();
-            if visited.contains(&coords) {
-                return position.x.abs() + position.y.abs()
-            }
-            visited.insert(coords);
-        }
+    let init_position = Position{x:0, y:0, direction: Direction::North};
+    let mut visited = HashSet::new();
+    let result =
+        input
+            .split(", ")
+            .map(|command| {
+                command.split_at(1)
+            })
+            .map(|(direction_to_turn, distance_to_travel)| {
+                (direction_to_turn.chars().nth(0).unwrap(), distance_to_travel.parse::<usize>().unwrap())
+            })
+            .flat_map(|(direction_to_turn, distance_to_travel)| {
+                iter::repeat(direction_to_turn).take(distance_to_travel).enumerate()
+            })
+            .scan(init_position, |position, (step, direction_to_turn)| {
+                if 0 == step {
+                    *position = position.turn(direction_to_turn).travel(1)
+                } else {
+                    *position = position.travel(1)
+                }
+                Some(*position)
+            })
+            .filter(|position| {
+                if visited.contains(&position.coords()) {
+                    true
+                } else {
+                    visited.insert(position.coords());
+                    false
+                }
+            })
+            .next();
+    match result {
+        Some(final_position) => final_position.x.abs() + final_position.y.abs(),
+        None => panic!("No duplicate positions")
     }
-    panic!("Did not visit the same position twice")
 }
