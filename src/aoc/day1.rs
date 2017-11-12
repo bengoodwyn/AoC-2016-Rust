@@ -82,5 +82,5 @@ pub fn part2(filename: &str) -> i32 {
             visited.insert(coords);
         }
     }
-    -1
+    panic!("Did not visit the same position twice")
 }
