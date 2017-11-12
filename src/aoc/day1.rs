@@ -55,15 +55,20 @@ impl Position {
 
 pub fn part1(filename: &str) -> i32 {
     let input = input::read(&filename);
-    let mut position = Position{x:0, y:0, direction: Direction::North};
-    for command in input.split(", ") {
-        let (direction_to_turn, distance_to_travel) = command.split_at(1);
-        let direction_to_turn = direction_to_turn.chars().nth(0).unwrap();
-        let distance_to_travel = distance_to_travel.parse::<i32>().unwrap();
-        position = position.turn(direction_to_turn);
-        position = position.travel(distance_to_travel);
-    }
-    position.x.abs() + position.y.abs()
+    let init_position = Position{x:0, y:0, direction: Direction::North};
+    let final_position =
+        input
+        .split(", ")
+        .map(|command| {
+            command.split_at(1)
+        })
+        .map(|(direction_to_turn, distance_to_travel)| {
+            (direction_to_turn.chars().nth(0).unwrap(), distance_to_travel.parse::<i32>().unwrap())
+        })
+        .fold(init_position, |position, (direction_to_turn, distance_to_travel)| {
+            position.turn(direction_to_turn).travel(distance_to_travel)
+        });
+    final_position.x.abs() + final_position.y.abs()
 }
 
 pub fn part2(filename: &str) -> i32 {
