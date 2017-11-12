@@ -94,15 +94,16 @@ fn new_crazy_key(start_key: char, direction: char) -> char {
 
 fn keypad(filename: &str, keypad_fn: &Fn(char, char) -> char) -> String {
     let input = input::read(&filename);
-    let mut key = '5';
-    let mut code = String::new();
-    for line in input.split("\n") {
-        for direction in line.chars() {
-            key = keypad_fn(key, direction)
-        }
-        code.push(key)
-    }
-    code
+    input
+        .lines()
+        .map(|line|{
+            line
+                .chars()
+                    .fold('5', |key, direction| {
+                        keypad_fn(key, direction)
+                    })
+        })
+        .collect::<String>()
 }
 
 pub fn part1(filename: &str) -> String {
