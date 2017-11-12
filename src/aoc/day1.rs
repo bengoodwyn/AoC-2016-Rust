@@ -10,21 +10,21 @@ enum Direction {
 }
 
 impl Direction {
-    fn turn(&self, direction_to_turn: &str) -> Direction {
+    fn turn(&self, direction_to_turn: char) -> Direction {
         match direction_to_turn {
-            "R" => match self {
+            'R' => match self {
                 &Direction::North => Direction::East,
                 &Direction::East => Direction::South,
                 &Direction::South => Direction::West,
                 &Direction::West => Direction::North,
             },
-            "L" => match self {
+            'L' => match self {
                 &Direction::North => Direction::West,
                 &Direction::East => Direction::North,
                 &Direction::South => Direction::East,
                 &Direction::West => Direction::South,
             },
-            &_ => panic!("Invalid turn {}", direction_to_turn)
+            _ => panic!("Invalid turn {}", direction_to_turn)
         }
     }
 }
@@ -37,7 +37,7 @@ struct Position {
 }
 
 impl Position {
-    fn turn(&self, direction_to_turn: &str) -> Position {
+    fn turn(&self, direction_to_turn: char) -> Position {
         Position{x: self.x, y: self.y, direction: self.direction.turn(direction_to_turn)}
     }
     fn travel(&self, distance_to_travel: i32) -> Position {
@@ -58,6 +58,7 @@ pub fn part1(filename: &str) -> i32 {
     let mut position = Position{x:0, y:0, direction: Direction::North};
     for command in input.split(", ") {
         let (direction_to_turn, distance_to_travel) = command.split_at(1);
+        let direction_to_turn = direction_to_turn.chars().nth(0).unwrap();
         let distance_to_travel = distance_to_travel.parse::<i32>().unwrap();
         position = position.turn(direction_to_turn);
         position = position.travel(distance_to_travel);
@@ -71,6 +72,7 @@ pub fn part2(filename: &str) -> i32 {
     let mut position = Position{x:0, y:0, direction: Direction::North};
     for command in input.split(", ") {
         let (direction_to_turn, distance_to_travel) = command.split_at(1);
+        let direction_to_turn = direction_to_turn.chars().nth(0).unwrap();
         let distance_to_travel = distance_to_travel.parse::<i32>().unwrap();
         position = position.turn(direction_to_turn);
         for _ in 0..distance_to_travel {
