@@ -1,5 +1,3 @@
-use aoc::input;
-
 #[derive(Debug, Clone, Copy)]
 struct Position {
     x: usize,
@@ -58,8 +56,7 @@ fn new_position(start_pos: Position, direction: char, keypad: &Keypad) -> Positi
     }
 }
 
-fn keypad(filename: &str, keypad: &Keypad) -> String {
-    let input = input::read(&filename);
+fn keypad(input: &str, keypad: &Keypad) -> String {
     input
         .lines()
         .map(|line| {
@@ -74,10 +71,10 @@ fn keypad(filename: &str, keypad: &Keypad) -> String {
         .collect::<String>()
 }
 
-pub fn part1(filename: &str) -> String {
-    keypad(filename, &BASIC_KEYPAD)
+pub fn part1(input: &str) -> String {
+    keypad(input, &BASIC_KEYPAD)
 }
 
-pub fn part2(filename: &str) -> String {
-    keypad(filename, &CRAZY_KEYPAD)
+pub fn part2(input: &str) -> String {
+    keypad(input, &CRAZY_KEYPAD)
 }
